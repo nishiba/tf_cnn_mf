@@ -112,7 +112,7 @@ class TextCNN(object):
         if self.previous_gradients is not None:
             s = np.sum([np.sum(np.multiply(x, y)) for x, y in zip(gradients, self.previous_gradients)])
             # s = tf.reduce_sum([tf.reduce_sum(tf.multiply(x, y)) for x, y in zip(gradients, self.previous_gradients)])
-            s = tf.clip_by_norm(s, -1., 1.)
+            s = np.clip(s, -1., 1.)
             self.current_learning_rate += 0.001 * s
             self.current_learning_rate = np.clip(self.current_learning_rate, 1e-8, 1e-2)
         self.previous_gradients = gradients
