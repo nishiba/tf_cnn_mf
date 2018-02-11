@@ -37,7 +37,7 @@ class ConvMF(object):
         #                             task=TaskType.Embedding)
 
         # item embedding layer
-        scale = 1.0 / np.sqrt(embedding_size)
+        scale = 1.0
         with tf.name_scope('item_embedding'):
             self.item_W = tf.Variable(tf.random_uniform([num_items, embedding_size], -scale, scale), name='W')
             self.embedding_items = tf.nn.embedding_lookup(self.item_W, self.input_item)
