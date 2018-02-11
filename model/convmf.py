@@ -12,7 +12,7 @@ class ConvMF(object):
     def __init__(self, num_items, num_users, sequence_length,
                  num_classes, vocab_size,
                  embedding_size, filter_sizes, num_filters,
-                 l2_reg_user_lambda=10.0,
+                 l2_reg_user_lambda=1.0,
                  l2_reg_item_lambda=100.0,
                  l2_reg_conv_lambda=10.0,
                  dropout_keep_prob_value=0.5) -> None:
@@ -37,7 +37,7 @@ class ConvMF(object):
         #                             task=TaskType.Embedding)
 
         # item embedding layer
-        scale = 1.0
+        scale = 1.0 / np.sqrt(embedding_size)
         with tf.name_scope('item_embedding'):
             self.item_W = tf.Variable(tf.random_uniform([num_items, embedding_size], -scale, scale), name='W')
             self.embedding_items = tf.nn.embedding_lookup(self.item_W, self.input_item)
