@@ -56,16 +56,20 @@ class ConvMF(object):
             self.error = tf.sqrt(tf.reduce_mean(losses), name='error')
             self.loss = tf.reduce_mean(losses) + l2_reg_user_lambda * self.l2_user_loss + l2_reg_item_lambda * self.l2_item_loss
 
-    def _train_step(self, item_batch, user_batch, rating_batch, session, train_op, gradients):
+    def _train_step(self, item_batch, user_batch, rating_batch, session, train_op, gradients, output):
         feed_dict = {self.input_item: item_batch,
                      self.input_user: user_batch,
                      self.input_rating: rating_batch,
                      self.learning_rate: self.current_learning_rate}
-        _, step, loss, error, grads = session.run([train_op, self.global_step, self.loss, self.error, gradients], feed_dict)
-        self._update_learning_rate(grads)
+        if output:
+            _, step, loss, error, grads = session.run([train_op, self.global_step, self.loss, self.error, gradients], feed_dict)
+            self._update_learning_rate(grads)
 
-        time_str = datetime.now().isoformat()
-        print("{}: step {}, loss {:g}, error {:g}, lr {:g}".format(time_str, step, loss, error, self.current_learning_rate))
+            time_str = datetime.now().isoformat()
+            print("{}: step {}, loss {:g}, error {:g}, lr {:g}".format(time_str, step, loss, error, self.current_learning_rate))
+        else:
+            _, grads = session.run([train_op, gradients], feed_dict)
+            self._update_learning_rate(grads)
 
     def _test_step(self, item_batch, user_batch, rating_batch, session):
         feed_dict = {self.input_item: item_batch,
@@ -97,8 +101,8 @@ class ConvMF(object):
 
         for batch in batches:
             item_batch, user_batch, rating_batch = zip(*batch)
-            self._train_step(item_batch, user_batch, rating_batch, session, train_op, gradients)
             current_step = tf.train.global_step(session, self.global_step)
+            self._train_step(item_batch, user_batch, rating_batch, session, train_op, gradients, output=current_step % 100 == 0)
             if current_step % 100 == 0:
                 print("\nEvaluation:")
                 self._test_step(item_test, user_test, rating_test, session)
