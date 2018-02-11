@@ -88,7 +88,7 @@ def train(num_items,
 
 def main():
     max_sentence_length = 60
-    batch_size = 2 ** 12
+    batch_size = 2 ** 14
     num_epochs = 5
 
     dataset, num_items, num_users = make_rating_data()
