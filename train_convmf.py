@@ -61,7 +61,7 @@ def train(num_items,
             log_device_placement=False,
             gpu_options=tf.GPUOptions(visible_device_list='0,1', allow_growth=True))
         sess = tf.Session(config=session_conf)
-        with sess.as_default():
+        with tf.device("/gpu:0"), sess.as_default():
             cnn = ConvMF(
                 num_items=num_items,
                 num_users=num_users,
@@ -73,19 +73,19 @@ def train(num_items,
                 embedding_size=embedding_size,
                 l2_reg_conv_lambda=l2_reg_lambda)
 
-        # Checkpoint directory.
-        timestamp = str(int(time.time()))
-        out_dir = os.path.abspath(os.path.join(os.path.curdir, 'runs', timestamp))
-        checkpoint_dir = os.path.abspath(os.path.join(out_dir, 'checkpoints'))
-        checkpoint_prefix = os.path.join(checkpoint_dir, 'model')
-        if not os.path.exists(checkpoint_dir):
-            os.makedirs(checkpoint_dir)
-        saver = tf.train.Saver(tf.global_variables(), max_to_keep=5)
+            # Checkpoint directory.
+            timestamp = str(int(time.time()))
+            out_dir = os.path.abspath(os.path.join(os.path.curdir, 'runs', timestamp))
+            checkpoint_dir = os.path.abspath(os.path.join(out_dir, 'checkpoints'))
+            checkpoint_prefix = os.path.join(checkpoint_dir, 'model')
+            if not os.path.exists(checkpoint_dir):
+                os.makedirs(checkpoint_dir)
+            saver = tf.train.Saver(tf.global_variables(), max_to_keep=5)
 
-        # Generate batches
-        cnn.train(batches, test_data, sess)
-        path = saver.save(sess, checkpoint_prefix)
-        print("Saved model checkpoint to {}\n".format(path))
+            # Generate batches
+            cnn.train(batches, test_data, sess)
+            path = saver.save(sess, checkpoint_prefix)
+            print("Saved model checkpoint to {}\n".format(path))
 
 
 def main():
