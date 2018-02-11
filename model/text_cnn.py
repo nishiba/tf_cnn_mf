@@ -31,7 +31,7 @@ class TextCNN(object):
         l2_loss = tf.constant(0.0)
 
         # word embedding layer
-        with tf.device('/cpu:0'), tf.name_scope('embedding'):
+        with tf.name_scope('embedding'):
             self.W = tf.Variable(tf.random_uniform([vocab_size, embedding_size], -1.0, 1.0), name='W')
             self.embedding_chars = tf.nn.embedding_lookup(self.W, self.input_x)
             self.embedding_chars_expanded = tf.expand_dims(self.embedding_chars, -1)

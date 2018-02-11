@@ -90,9 +90,9 @@ def train(batches,
     with tf.Graph().as_default():
         session_conf = tf.ConfigProto(
             allow_soft_placement=True,
-            log_device_placement=True)
+            log_device_placement=False)
         sess = tf.Session(config=session_conf)
-        with sess.as_default():
+        with sess.as_default(), tf.device('gpu:0'):
             cnn = TextCNN(
                 sequence_length=sequence_length,
                 num_classes=num_classes,
