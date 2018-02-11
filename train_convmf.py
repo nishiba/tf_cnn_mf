@@ -59,7 +59,7 @@ def train(num_items,
         allow_soft_placement=True,
         log_device_placement=False,
         gpu_options=tf.GPUOptions(visible_device_list='0,1', allow_growth=True))
-    sess = tf.Session(config=session_conf)
+    sess = tf.Session()
     with tf.device("/gpu:0"), sess.as_default():
         cnn = ConvMF(
             num_items=num_items,
