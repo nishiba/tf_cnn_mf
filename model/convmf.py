@@ -63,13 +63,13 @@ class ConvMF(object):
                      self.learning_rate: self.current_learning_rate}
         if output:
             _, step, loss, error, grads = session.run([train_op, self.global_step, self.loss, self.error, gradients], feed_dict)
-            self._update_learning_rate(grads)
+            # self._update_learning_rate(grads)
 
             time_str = datetime.now().isoformat()
             print("{}: step {}, loss {:g}, error {:g}, lr {:g}".format(time_str, step, loss, error, self.current_learning_rate))
         else:
             _, grads = session.run([train_op, gradients], feed_dict)
-            self._update_learning_rate(grads)
+            # self._update_learning_rate(grads)
 
     def _test_step(self, item_batch, user_batch, rating_batch, session):
         feed_dict = {self.input_item: item_batch,
