@@ -104,6 +104,4 @@ class ConvMF(object):
             current_step = tf.train.global_step(session, self.global_step)
             self._train_step(item_batch, user_batch, rating_batch, session, train_op, gradients, output=current_step % 100 == 0)
             if current_step % 100 == 0:
-                print("\nEvaluation:")
                 self._test_step(item_test, user_test, rating_test, session)
-                print("")

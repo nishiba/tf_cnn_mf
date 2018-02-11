@@ -88,15 +88,15 @@ def train(num_items,
 
 def main():
     max_sentence_length = 60
-    batch_size = 2 ** 14
-    num_epochs = 5
+    batch_size = 2 ** 12
+    num_epochs = 30
 
     dataset, num_items, num_users = make_rating_data()
     train_data, test_data = train_test_split(dataset, random_state=123, test_size=0.1)
     train_iter = batch_iter(train_data, batch_size=batch_size, num_epochs=num_epochs, do_shuffle=True)
 
     num_classes = 2
-    embedding_size = 300
+    embedding_size = 200
     filter_sizes = [3, 4, 5]
     num_filters = 100
     l2_reg_lambda = 10
